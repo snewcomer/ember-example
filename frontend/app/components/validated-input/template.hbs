@@ -1,0 +1,26 @@
+  {{input
+    maxlength=maxlength
+    type=type
+    placeholder=placeholder
+    value=value
+    class=className
+    id=(if count (concat valuePath count) valuePath)
+    focus-out="focusedOut"
+    key-up="keyedUp"
+  }}
+  {{#if showMessage}}
+      {{#if (v-get model valuePath "message")}}
+        {{#tether-dialog
+          container-class="tether-dialog-reset"
+          target=(concat "#" valuePath)
+          hasOverlay=false
+          attachment="bottom left"
+          targetAttachment="top left"
+          offset="5px 0"
+        }}
+        <div class="validated-input-error-dialog error">
+         {{t (v-get model valuePath "message")}}
+       </div>
+        {{/tether-dialog}}
+      {{/if}}
+  {{/if}}

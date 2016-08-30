@@ -1,0 +1,54 @@
+<article class="main">
+  <div class="form">
+    <header>
+      <button {{action "save"}} />
+    </header>
+    <section class="docSection container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+          <section style="padding-bottom: 0">
+            <div class="row card-title">
+                {{tickets/ticket-status-tag item=model}}
+              <div class="col-md-12 request-wrap">
+                <div class="input-group">
+                  <span class="input-group-addon">{{t "ticket.label.request"}}</span>
+                  {{validated-input
+                    model=model
+                    placeholder=(t "ticket.label.request")
+                    valuePath="request"
+                    className="form-control t-ticket-request ticket-request"
+                    didValidate=didValidate
+                    textarea=true
+                    class="t-ticket-request-validator"
+                  }}
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>
+<aside class="side-panel">
+  <header>
+    <h1></h1>
+  </header>
+  <menu class="t-side-menu">
+    <section>
+      <div class="col-md-12">
+        {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+        {{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=personRepo searchMethod="findPeople" valuePath="assignee" didValidate=didValidate errorClass="error t-ticket-assignee-error"}}
+        {{/form-group}}
+      </div>
+      <div class="col-md-12">
+        {{#form-group title="ticket.label.cc" for="cc"}}
+        {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findPeople"}}
+        {{/form-group}}
+      </div>
+      <div class="ticket-action status">
+        {{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status'}}
+      </div>
+    </section>
+  </menu>
+</aside>

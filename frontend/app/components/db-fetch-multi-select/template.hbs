@@ -1,0 +1,12 @@
+{{#power-select-multiple
+  selected=selectedAttr
+  onchange=(action "selected")
+  class=className
+  tagName="div"
+  search=(perform searchRepo)
+  searchField=displayName
+  disabled=isDisabled
+  as |optionModel|
+}}
+  {{get optionModel displayName}}
+{{/power-select-multiple}}

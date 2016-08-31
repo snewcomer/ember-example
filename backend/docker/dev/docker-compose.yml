@@ -1,0 +1,47 @@
+version: '2'
+
+volumes:
+  build:
+    driver: local
+  cache:
+    external: true
+
+services:
+  test:
+    build: 
+      context: ../../
+      dockerfile: docker/dev/Dockerfile  
+    volumes:
+      - cache:/cache
+      - build:/build
+    links:
+      - db
+    environment:
+      DJANGO_SETTINGS_MODULE: backend.settings.base
+      BSRS_DB_CI_USER: dev
+      BSRS_DB_CI_PASSWORD: puekey
+      TEST_OUTPUT_DIR: /reports
+      DATABASE_HOST: postgres
+
+  builder:
+    build: 
+      context: ../../
+      dockerfile: docker/dev/Dockerfile
+    volumes:
+      - build:/build
+    entrypoint: "entrypoint.sh"
+    command: ["pip", "wheel", "--no-index", "-f /build", "."]
+
+  agent:
+    image: jmenga/ansible
+    links:
+      - db
+    environment:
+      PROBE_HOST: "db"
+      PROBE_PORT: "3306"
+    command: ["probe.yml"]
+
+  db:
+    image: postgres
+    env_file:
+      - ../../env/app.${APP_ENV}.env

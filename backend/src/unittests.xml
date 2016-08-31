@@ -1,0 +1,1 @@
+<?xml version="1.0" encoding="UTF-8"?><testsuite name="nosetests" tests="2" errors="0" failures="0" skip="0"><testcase classname="ticket.tests.TestCreate" name="test_201" time="0.033"></testcase><testcase classname="ticket.tests.TestCreate" name="test_created" time="0.007"></testcase></testsuite>

@@ -3,8 +3,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
   };
   factory.prototype.get = function(i) {
     //right now function used for tickets
-    var first_name = first_name || this.person_defaults.first_name;
-    var last_name = last_name || this.person_defaults.last_name;
+    var first_name = this.person_defaults.first_name;
+    var last_name = this.person_defaults.last_name;
     var fullname = first_name + ' ' + last_name;
     return {
       id: i || this.person_defaults.id,
@@ -48,12 +48,13 @@ var BSRS_PEOPLE_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  module.exports = new BSRS_PEOPLE_FACTORY();
+  var person_defaults = require('../vendor/defaults/person');
+  module.exports = new BSRS_PEOPLE_FACTORY(person_defaults);
 } else {
-  define('frontend/vendor/people_fixtures', ['exports'],
-         function (exports) {
+  define('frontend/vendor/people_fixtures', ['exports', 'frontend/vendor/defaults/person'],
+         function (exports, person_defaults) {
            'use strict';
-           var Factory = new BSRS_PEOPLE_FACTORY();
+           var Factory = new BSRS_PEOPLE_FACTORY(person_defaults);
            return {default: Factory};
          });
 }

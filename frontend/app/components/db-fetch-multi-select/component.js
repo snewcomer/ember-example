@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import config from 'frontend/config/environment';
+import { task, timeout } from 'ember-concurrency';
 
 const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 

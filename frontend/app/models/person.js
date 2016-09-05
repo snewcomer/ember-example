@@ -1,5 +1,4 @@
 import Ember from 'ember';
-const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 
 var Person = Model.extend({

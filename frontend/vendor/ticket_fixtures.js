@@ -27,6 +27,27 @@ var BSRS_TICKET_FACTORY = (function() {
     }
     return response;
   };
+  factory.prototype.generate_list = function(i) {
+    return {
+      id: i,
+      request: this.ticket.requestOne,
+    }
+  };
+  factory.prototype.list = function(statusId, statusName) {
+    var response = [];
+    for (var i=1; i <= 10; i++) {
+      var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
+      if (i < 10) {
+        uuid = uuid + '0' + i;
+      } else{
+        uuid = uuid + i;
+      }
+      var ticket = this.generate_list(uuid);
+      ticket.request = 'subb' + i;
+      response.push(ticket);
+    }
+    return {'count':10*2-1,'next':null,'previous':null,'results': response};
+  };
   return factory;
 })();
 

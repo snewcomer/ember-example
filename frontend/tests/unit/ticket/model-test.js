@@ -20,12 +20,6 @@ test('ticket request field is dirty trackable', (assert) => {
   assert.ok(ticket.get('isDirty'));
 });
 
-test('ticket request field is dirty trackable with existing', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, request: 'who'});
-  ticket.set('request', 'wat');
-  assert.ok(ticket.get('isDirty'));
-});
-
 test('ticket request field is not dirty with empty string and no existing', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne});
   ticket.set('request', 'wat');

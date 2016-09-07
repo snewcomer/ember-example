@@ -10,7 +10,7 @@ var BSRS_TICKET_FACTORY = (function() {
       request: this.ticket.requestOne,
       status_fk: this.ticket.statusOneId,
       assignee: this.person_fixtures.get(),
-      cc: [this.person_fixtures.get_no_related()],
+      cc: [this.person_fixtures.get()],
     }
   };
   factory.prototype.detail = function(i) {
@@ -63,5 +63,5 @@ if (typeof window === 'undefined') {
          'use strict';
          var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, person_fixtures);
          return {default: Factory};
-});
+  });
 }

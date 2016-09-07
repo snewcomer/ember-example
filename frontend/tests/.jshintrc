@@ -12,6 +12,8 @@
     "exists",
     "fillIn",
     "click",
+    "selectChoose",
+    "selectSearch",
     "keyEvent",
     "triggerEvent",
     "find",

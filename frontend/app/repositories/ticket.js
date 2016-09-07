@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'frontend/utilities/deserializer';
-import { TICKETS_URL } from 'frontend/utilities/urls';
+import { TICKETS_URL, PEOPLE_URL } from 'frontend/utilities/urls';
 
 var TicketRepo = Ember.Object.extend({
   type: 'ticket',
@@ -32,6 +32,16 @@ var TicketRepo = Ember.Object.extend({
     const store = this.get('simpleStore');
     return store.find(type, id);
   },
+  findPeople(search) {
+    let url = PEOPLE_URL;
+    search = search ? search.trim() : search;
+    if (search) {
+      url += `person__icontains=${search}/`;
+      return PromiseMixin.xhr(url, 'GET').then((response) => {
+        return response.results;
+      });
+    }
+  }
 });
 
 export default TicketRepo;

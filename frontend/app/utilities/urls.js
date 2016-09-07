@@ -5,7 +5,7 @@ const PREFIX = config.APP.NAMESPACE;
 // API Urls
 export const TICKETS_URL = `${PREFIX}/tickets/`;
 
-export const TICKET_LIST_URL = '/tickets/index';
+export const TICKET_LIST_URL = '/tickets';
 
 var BASEURLS = {
   base_tickets_url: '/tickets',

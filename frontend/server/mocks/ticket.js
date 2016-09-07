@@ -5,7 +5,6 @@ module.exports = function(app) {
   var adminTicketsRouter = express.Router();
 
   adminTicketsRouter.get('/', function(req, res) {
-    console.log('shit')
     res.send(TICKET_FIXTURES.list());
   });
 

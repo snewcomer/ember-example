@@ -21,6 +21,8 @@ const Validations = buildValidations({
 var TicketModel = Model.extend(Validations, {
   simpleStore: Ember.inject.service(),
   request: attr(''),
+  
+  // BELONGS_TO - STATUS
   status_fk: undefined,
   status: Ember.computed.alias('statuses.firstObject'),
   statuses: Ember.computed(function() {
@@ -32,18 +34,18 @@ var TicketModel = Model.extend(Validations, {
   }),
   change_status(id) {
     const store = this.get('simpleStore');
-    const old_status = this.get('status');
-    let tickets = [];
-    if (old_status) {
-      tickets = old_status.get('tickets');
-    }
-    const new_status = store.find('ticket-status', id);
-    const updated_tickets_array = tickets.filter(id => id !== this.get('id') );
     run(() => {
+      // old - remove ticket id from tickets array
+      const old_status = this.get('status');
       if (old_status) {
+        const tickets = old_status.get('tickets') || [];
+        const updated_tickets_array = tickets.filter(id => id !== this.get('id') );
         store.push('ticket-status', {id: old_status.get('id'), tickets: updated_tickets_array});
-      }
-      store.push('ticket-status', {id: id, tickets: new_status.get('tickets').concat(this.get('id'))});
+      } 
+      // new - add ticket id to tickets array
+      const new_status = store.find('ticket-status', id);
+      const new_status_tickets = new_status.get('tickets') || [];
+      store.push('ticket-status', {id: id, tickets: new_status_tickets.concat(this.get('id'))});
     });
   },
   statusIsDirty: Ember.computed('status', 'status_fk', function() {
@@ -64,7 +66,8 @@ var TicketModel = Model.extend(Validations, {
       this.get('simpleStore').push('ticket', { id: pk, 'tickets': status ? status.get('id') : null });
     });
   },
-  // assignee_fk: undefined,
+
+  // MANY_TO_MANY - CC
   ticket_cc_fks: [],
   cc: Ember.computed('ticket_cc.[]', function() {
     const many_related_models = this.get('ticket_cc');
@@ -101,8 +104,6 @@ var TicketModel = Model.extend(Validations, {
     });
   },
   add_cc(many_related_model) {
-    const many_fk = 'person_pk';
-    const main_many_fk = 'ticket_pk';
     const store = this.get('simpleStore');
     let new_many_related = store.find('person', many_related_model.id);
     if(!new_many_related.get('content') || new_many_related.get('isNotDirtyOrRelatedNotDirty')){
@@ -118,11 +119,11 @@ var TicketModel = Model.extend(Validations, {
     //check for existing
     const existing_join = store.find('ticket-join-person').toArray();
     let existing = existing_join.filter((m2m) => {
-      return m2m.get(many_fk) === many_related_pk && m2m.get(main_many_fk) === this.get('id');
+      return m2m.get('person_pk') === many_related_pk && m2m.get('ticket_pk') === this.get('id');
     }).objectAt(0);
     const new_join_model = {id: Ember.uuid()};
-    new_join_model[main_many_fk] = this.get('id');
-    new_join_model[many_fk] = many_related_pk;
+    new_join_model['ticket_pk'] = this.get('id');
+    new_join_model['person_pk'] = many_related_pk;
     let new_model;
     run(() => {
       if(existing){

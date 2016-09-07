@@ -6,7 +6,7 @@ var TicketSingleRoute = Ember.Route.extend({
   model(params) {
     const pk = params.ticket_id;
     const repository = this.get('repository');
-    const statuses = this.get('statuses');
+    const statuses = this.get('simpleStore').find('ticket-status');
     return Ember.RSVP.hash({
       model: repository.findById(pk),
       statuses: statuses,

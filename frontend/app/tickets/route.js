@@ -5,7 +5,11 @@ export default Ember.Route.extend({
   repository: inject('grid'),
   model() {
     const repository = this.get('repository');
-    return repository.find();
+    // xhr
+    repository.find();
+    return Ember.RSVP.hash({
+      model: this.get('simpleStore').find('ticket')
+    });
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);

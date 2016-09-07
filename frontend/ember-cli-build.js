@@ -20,6 +20,7 @@ module.exports = function(defaults) {
   // please specify an object with the list of modules as keys
   // along with the exports of each module as its value.
   if(app.env !== 'production') {
+      app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
       app.import('vendor/person_fixtures.js');
       app.import('vendor/ticket_fixtures.js');
       app.import('vendor/defaults/person.js');

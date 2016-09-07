@@ -68,7 +68,6 @@ test('status will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, status_fk: undefined});
   store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
   ticket.saveRelated();
-  ticket.get('status');
   assert.equal(ticket.get('status_fk'), undefined);
 });
 

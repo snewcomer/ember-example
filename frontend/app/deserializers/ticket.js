@@ -2,9 +2,17 @@ import Ember from 'ember';
 
 var TicketDeserializer = Ember.Object.extend({
   setup_status(fk, ticket) {
-    let store = this.get('simpleStore');
-    const ticket_status = store.find('ticket-status', fk);
-    store.push('ticket-status', { id: ticket.get('id'), tickets: ticket_status.get('tickets').concat(ticket.get('id')) });
+    ticket.change_status(fk);
+  },
+  setup_cc(cc_json, ticket, store) {
+    const existing_cc = ticket.get('cc');
+    existing_cc.forEach((cc) => {
+      ticket.remove_cc(cc.get('id'));
+    });
+    cc_json.forEach((cc) => {
+      ticket.add_cc(cc);
+      store.push('person', cc);
+    });
   },
   deserialize(response, id) {
     if (id) {
@@ -15,21 +23,18 @@ var TicketDeserializer = Ember.Object.extend({
   },
   _deserializeList(response) {
     let store = this.get('simpleStore');
-    response.forEach((ticket) => {
-      store.push('ticket', ticket);
+    response.results.forEach((ticket) => {
+      const pushed_ticket = store.push('ticket', ticket);
+      pushed_ticket.save();
     });
   },
   _deserializeSingle(response) {
     let store = this.get('simpleStore');
-    // let cc_json = response.cc;
-    // delete response.cc;
-    // let assignee_json = response.assignee;
-    // response.assignee_fk = response.assignee ? response.assignee.id : undefined;
-    // delete response.assignee;
+    let cc_json = response.cc;
+    delete response.cc;
     let ticket = store.push('ticket', response);
     this.setup_status(response.status_fk, ticket);
-    // this.setup_assignee(assignee_json, ticket);
-    // this.setup_cc(cc_json, ticket);
+    this.setup_cc(cc_json, ticket, store);
     ticket.save();
     return ticket;
   },

@@ -9,6 +9,7 @@ export default Ember.Controller.extend({
   repository: inject('ticket'),
   searchRepo: task(function * (search) {
     if (Ember.isBlank(search)) { return []; }
+    // ensure we arent firing off queries all the time
     yield timeout(DEBOUNCE_MS);
     const repository = this.get('repository');
     const json = yield repository['findPeople'](search);
@@ -19,6 +20,7 @@ export default Ember.Controller.extend({
       model.change_status(status.get('id'));
     },
     changeCC(new_selection) {
+      // power select passes the array of cc's including the one you just selected
       const model = this.get('model');
       const old_selection = model.get('cc');
       const old_selection_ids = model.get('cc_ids');

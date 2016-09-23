@@ -74,7 +74,7 @@ var TicketModel = Model.extend(Validations, {
     const pk = this.get('id');
     const status = this.get('status');
     run(() => {
-      this.get('simpleStore').push('ticket', { id: pk, 'tickets': status ? status.get('id') : null });
+      this.get('simpleStore').push('ticket', { id: pk, 'status_fk': status ? status.get('id') : null });
     });
   },
 

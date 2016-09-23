@@ -58,11 +58,44 @@ test('change_status will append the ticket id to the new status tickets array', 
   assert.deepEqual(status.get('tickets'), [9, TD.idOne]);
 });
 
+test('status will save correctly when changed starting with undefined', (assert) => {
+  ticket = store.push('ticket', {id: TD.idOne, status_fk: undefined});
+  store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
+  assert.equal(ticket.get('status_fk'), undefined);
+  assert.equal(ticket.get('status.id'), undefined);
+  ticket.change_status(TD.statusOneId);
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.equal(ticket.get('status.id'), TD.statusOneId);
+  assert.equal(ticket.get('status_fk'), undefined);
+  ticket.saveRelated();
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('status.id'), TD.statusOneId);
+  assert.equal(ticket.get('status_fk'), TD.statusOneId);
+});
+
+test('status will save correctly when changed starting with a status', (assert) => {
+  ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusTwoId});
+  store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
+  store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo, tickets: [TD.idOne]});
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('status.id'), TD.statusTwoId);
+  assert.equal(ticket.get('status_fk'), TD.statusTwoId);
+  ticket.change_status(TD.statusOneId);
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.equal(ticket.get('status.id'), TD.statusOneId);
+  assert.equal(ticket.get('status_fk'), TD.statusTwoId);
+  ticket.saveRelated();
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('status.id'), TD.statusOneId);
+  assert.equal(ticket.get('status_fk'), TD.statusOneId);
+});
+
 test('status will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, status_fk: undefined});
   store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
   ticket.saveRelated();
   assert.equal(ticket.get('status_fk'), undefined);
+  assert.equal(ticket.get('status.id'), undefined);
 });
 
 /*TICKET TO CC*/
